@@ -2,16 +2,15 @@ const express = require('express');
 const router  = express.Router();
 const User = require("../models/User")
 
-router.get('/users', (req, res, next) => {
+router.get("/users", (req,res)=>{
     User.find()
-    .then(usersFromDb=> {
-        res.render('users', { users:usersFromDb });
+      .then(users=>{
+         res.render("users", {users:users})
+        })
+  .catch(error=>{
+    console.log(error)
     })
-    .catch(error=>{
-        console.log(error)
-    })
-  
-});
+})
 
 
 router.get('/users/:id', (req, res, next) => {
@@ -25,7 +24,5 @@ router.get('/users/:id', (req, res, next) => {
       });
     })
   });
-
-
 
 module.exports = router;
