@@ -10,33 +10,39 @@ const mongoose = require ("mongoose")
 
 mongoose.Promise = Promise;
 mongoose
-  .connect('mongodb://localhost/home-project', {useMongoClient: true})
+  .connect('mongodb://localhost/ironhome-project', {useMongoClient: true})
   .then(() => {
     console.log('Connected to Mongo!')
   }).catch(err => {
     console.error('Error connecting to mongo', err)
   });
 
-  User.deleteMany()
-  .then(x=>console.log(x +"users were deleted"))
-  .catch(err=>console.log(err + "something went wrong"))
+function capitalizeFirstLetter(string){
+      return string.charAt(0).toUpperCase() + string.slice(1)  }
+
+
+
+User.deleteMany()
+.then(x=>{
+  console.log(x + " users were deleted")
   Home.deleteMany()
-  .then(x=>console.log(x.length +"homes were deleted"))
-  .catch(x=>console.log(err, "something went worng!"))
+  .then(x=>{
+    console.log(x + " were deleted")
 
 
-  let usersToCreate= users.map(user=>{
-      return{
-          firstname:user.name.first,
-          lastname:user.name.last,
-          email:user.email,
+    let usersToCreate = users.map(user=> {
+      return {
+          firstname:capitalizeFirstLetter(user.name.first) ,
+          lastname:capitalizeFirstLetter( user.name.last) ,
+          email: user.email,
           picture:user.picture.large
       }
-  })
+    });
 
-  User.create(usersToCreate)
-  .then(usersFromDb=>{
-    let homesToCreate = users.map( (user, index) => {
+
+    User.create(usersToCreate)
+    .then(usersFromDb=>{
+      let homesToCreate = users.map( (user, index) => {
         return {
           picture: pictures[index],
           _owner: usersFromDb[index]._id,
@@ -51,12 +57,26 @@ mongoose
           }
         }
         })
+        
+      
         Home.create(homesToCreate)
-        .then(homes=>console.log(homes.length +"homes were"))
+          .then(homes=> console.log(homes.length+ " homes created"))
+      
+    })
+    
+    .catch(err=>console.log("err", err))
+
   })
-  .catch(err=> console.log("Erro happens", err));
+  .catch(err=>console.log("err", err))
+})
+.catch(err=>console.log("err", err)) 
 
-     
-  
 
-   
+
+      //console.log(users.length + " users created")
+      
+          //console.log("0", homesToCreate[0]);
+          
+          
+      //console.log(users[0]._id)
+
